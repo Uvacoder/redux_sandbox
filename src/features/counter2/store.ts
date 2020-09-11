@@ -37,19 +37,6 @@ const asyncThunks = {
 };
 
 
-import("../../app/store").then(async ({ store })=> {
-
-    const lastReturnedAction = await store.dispatch(asyncThunks.incrementByAmountAfterDelay({ "amount": 100 }));
-
-    if( asyncThunks.incrementByAmountAfterDelay.fulfilled.match(lastReturnedAction) ){
-
-
-    }
-
-
-    
-
-});
 
 const reusableReducers = {
     "setMessage": (state: State, { payload }: { payload: { message: string; } }) => {
