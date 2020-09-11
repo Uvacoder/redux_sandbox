@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../app/store";
 
@@ -42,13 +43,17 @@ export function Counter2() {
           className={styles.asyncButton}
           onClick={async () => {
 
-            const lastReturnedAction = await dispatch(counter2Actions.incrementByAmountAfterDelay({ "amount": parseInt(incrementAmount) ?? 0 }));
+            //Without unwrapResult we have to use matcher to get amountOut
+            //see: https://user-images.githubusercontent.com/6702424/92951682-10413200-f45f-11ea-8650-cb6cddfe7154.png
+            //see: https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+            const { amountOut } = await dispatch(
+              counter2Actions.incrementByAmountAfterDelay(
+                { "amount": parseInt(incrementAmount) ?? 0 }
+              )
+            ).then(unwrapResult);
 
-            if (counter2Actions.incrementByAmountAfterDelay.fulfilled.match(lastReturnedAction)) {
+            console.log(`In component, trunk result: amountOut: ${amountOut}`);
 
-              console.log(`In component, trunk result: amountOut: ${lastReturnedAction.payload.amountOut}`);
-
-            }
 
           }}
         >

@@ -27,7 +27,29 @@ const asyncThunks = {
 
                     await new Promise(resolve => setTimeout(resolve, 500));
 
+                    await dispatch(asyncThunks.setMessageAfterMicroDelay({ "message": "tick" }));
+
                     return { "amountOut": amount };
+
+                }
+            )
+        }
+
+    })(),
+    ...(() => {
+
+        const typePrefix = "setMessageAfterMicroDelay";
+
+        return {
+            [typePrefix]: createAsyncThunk(
+                `${name}/${typePrefix}`,
+                async (payload: { message: string; }, { dispatch }) => {
+
+                    const { message } = payload;
+
+                    await new Promise(resolve => setTimeout(resolve, 50));
+
+                    return { "message": `=>${message}<=` };
 
                 }
             )
@@ -87,6 +109,21 @@ export const slice = createSlice({
                     state,
                     { "payload": { "message": "Start incrementByAmountAfterDelay" } }
                 );
+
+            }
+        );
+
+        builder.addCase(
+            asyncThunks.setMessageAfterMicroDelay.fulfilled,
+            (state, { payload }) => {
+
+                const { message } = payload;
+
+                reusableReducers.setMessage(
+                    state,
+                    { "payload": { message } }
+                );
+
 
             }
         );
