@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../app/store";
+import type { SerializedError } from "@reduxjs/toolkit";
+import { assert, typeGuard } from "evt/tools/typeSafety";
 
 import { actions as counter2Actions, select as counter2Select } from "./store";
 import styles from "./Counter2.module.css";
@@ -43,16 +45,27 @@ export function Counter2() {
           className={styles.asyncButton}
           onClick={async () => {
 
-            //Without unwrapResult we have to use matcher to get amountOut
-            //see: https://user-images.githubusercontent.com/6702424/92951682-10413200-f45f-11ea-8650-cb6cddfe7154.png
-            //see: https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
-            const { amountOut } = await dispatch(
-              counter2Actions.incrementByAmountAfterDelay(
-                { "amount": parseInt(incrementAmount) ?? 0 }
-              )
-            ).then(unwrapResult);
+            try {
 
-            console.log(`In component, trunk result: amountOut: ${amountOut}`);
+              //Without unwrapResult we have to use matcher to get amountOut
+              //see: https://user-images.githubusercontent.com/6702424/92951682-10413200-f45f-11ea-8650-cb6cddfe7154.png
+              //see: https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+              const { amountOut } = await dispatch(
+                counter2Actions.incrementByAmountAfterDelay(
+                  { "amount": parseInt(incrementAmount) ?? 0 }
+                )
+              ).then(unwrapResult);
+
+              console.log(`In component, trunk result: amountOut: ${amountOut}`);
+
+            } catch (error) {
+
+              //NOTE: error is not an instance of Error
+              assert(typeGuard<SerializedError>(error));
+
+              console.log(error.message);
+
+            }
 
 
           }}

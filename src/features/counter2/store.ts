@@ -21,6 +21,12 @@ const asyncThunks = {
 
                     const { amount } = payload;
 
+                    if( amount < 0 ){
+
+                        throw new Error("The counter was negative");
+
+                    }
+
                     await new Promise(resolve => setTimeout(resolve, 500));
 
                     dispatch(syncActions.setMessage({ "message": "A message in the middle" }));
@@ -33,7 +39,7 @@ const asyncThunks = {
 
                 }
             )
-        }
+        };
 
     })(),
     ...(() => {
@@ -45,7 +51,7 @@ const asyncThunks = {
                 `${name}/${typePrefix}`,
                 async (payload: { message: string; }, { dispatch }) => {
 
-                    const { message } = payload;
+                    const { message } = payload;
 
                     await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -71,7 +77,7 @@ const reusableReducers = {
 export const slice = createSlice({
     name,
     "initialState": id<State>({
-        "value": 666,
+        "value": 0,
         "message": ""
     }),
     "reducers": {
