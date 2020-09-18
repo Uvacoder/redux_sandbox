@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch ,useSelector } from "../../app/store";
+import { useDispatch, useSelector } from "../../app/store";
 import { actions as counter1Actions } from './store';
 import { actions as counter2Actions } from "../counter2/store";
 
@@ -8,7 +8,20 @@ import { actions as counter2Actions } from "../counter2/store";
 import styles from './Counter1.module.css';
 
 export function Counter1() {
-  const counter1 = useSelector(({ counter1 })=> counter1 );
+  const counter1 = useSelector(({ counter1 }) => counter1);
+
+  const states = (function useClosure() {
+
+    const counter1_0 = useSelector(({ counter1 }) => counter1);
+    const counter1_1 = useSelector(({ counter1 }) => counter1);
+
+    return { counter1_0, counter1_1 };
+
+  })();
+
+  console.log(states);
+
+
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
