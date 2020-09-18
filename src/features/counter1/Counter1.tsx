@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { actions as counter1Actions, select as counter1Select } from './store';
+import { useDispatch ,useSelector } from "../../app/store";
+import { actions as counter1Actions } from './store';
 import { actions as counter2Actions } from "../counter2/store";
+
+
 
 import styles from './Counter1.module.css';
 
 export function Counter1() {
-  const count = useSelector(counter1Select);
+  const counter1 = useSelector(({ counter1 })=> counter1 );
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
@@ -21,7 +23,7 @@ export function Counter1() {
         >
           + (both)
         </button>
-        <span className={styles.value}>{count.value}</span>
+        <span className={styles.value}>{counter1.value}</span>
         <button
           className={styles.button}
           aria-label="Decrement value"

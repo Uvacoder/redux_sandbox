@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store';
 import { id } from "evt/tools/typeSafety/id";
 
 export type State = {
@@ -17,7 +16,7 @@ const asyncThunks = {
         return {
             [typePrefix]: createAsyncThunk(
                 `${name}/${typePrefix}`,
-                async (payload: { amount: number; }, { dispatch }) => {
+                async (payload: { amount: number; }, thunkApi) => {
 
                     const { amount } = payload;
 
@@ -29,11 +28,14 @@ const asyncThunks = {
 
                     await new Promise(resolve => setTimeout(resolve, 500));
 
-                    dispatch(syncActions.setMessage({ "message": "A message in the middle" }));
+                    thunkApi.dispatch(syncActions.setMessage({ "message": "A message in the middle" }));
 
                     await new Promise(resolve => setTimeout(resolve, 500));
 
-                    await dispatch(asyncThunks.setMessageAfterMicroDelay({ "message": "tick" }));
+                    await thunkApi.dispatch(asyncThunks.setMessageAfterMicroDelay({ "message": "tick" }));
+
+
+                    //TODO: See if when aborted it still resolves
 
                     return { "amountOut": amount };
 
@@ -63,8 +65,6 @@ const asyncThunks = {
 
     })()
 };
-
-
 
 const reusableReducers = {
     "setMessage": (state: State, { payload }: { payload: { message: string; } }) => {
@@ -143,10 +143,5 @@ export const actions = {
     ...syncActions,
     ...asyncThunks
 }
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const select = (state: RootState) => state.counter2;
 
 export const reducer = slice.reducer;

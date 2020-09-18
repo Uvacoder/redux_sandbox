@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from '../../app/store';
+import { AppThunk } from '../../app/store';
 import { actions as counter2Actions  } from "../counter2/store";
 import { id } from "evt/tools/typeSafety/id"; 
 
@@ -56,8 +56,6 @@ export const actions = {
   ...slice.actions,
   ...thunks
 }
-
-export const select = (state: RootState) => state.counter1;
 
 export const reducer= slice.reducer;
 

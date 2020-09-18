@@ -1,7 +1,11 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+
+import { configureStore } from '@reduxjs/toolkit';
+import type { ThunkAction, Action } from '@reduxjs/toolkit';
+
 import * as counter1 from '../features/counter1/store';
 import * as counter2 from "../features/counter2/store";
-import * as reactRedux from  "react-redux";
+import * as reactRedux from "react-redux";
+
 
 export const store = configureStore({
   "reducer": {
@@ -10,7 +14,11 @@ export const store = configureStore({
   },
 });
 
-export const useDispatch = ()=> reactRedux.useDispatch<typeof store.dispatch>();
+export const useDispatch =
+  () => reactRedux.useDispatch<typeof store.dispatch>();
+
+export const useSelector: reactRedux.TypedUseSelectorHook<RootState> =
+  reactRedux.useSelector;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
